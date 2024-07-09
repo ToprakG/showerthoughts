@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shower Thoughts</title>
+    <link rel="icon" href="shower.png" type="image/x-icon">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+
+        .container {
+            background-color: rgb(38, 38, 38);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 80%;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto; /* Enable vertical scrolling */
+            max-height: 80vh; /* Limit maximum height for scrolling */
+        }
+
+        .shower-thought {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .upvote-btn, .downvote-btn {
+            background-color: transparent;
+            color: #fff;
+            border: 2px solid #fff;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 0 10px;
+        }
+        .upvote-btn:hover, .downvote-btn:hover {
+            background-color: #fff;
+            color: #000;
+        }
+        .upvoted, .downvoted {
+            background-color: #fff;
+            color: #000;
+        }
+        h1 {
+            position: absolute;
+            top: 20px;
+            right: 550px;
+        }
+        h3 {
+            position: absolute;
+            top: 80px;
+            right: 480px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+          <h1>Shower Thoughts</h1>
+          <h3>Scroll down using space and your down button</h3>
+        </div>
+      </header>
+
+    <div class="container" id="container">
+        <div class="shower-thought" id="thought"></div>
+        <button id="upvote-btn" class="upvote-btn" onclick="upvote()">Upvote</button>
+        <button id="downvote-btn" class="downvote-btn" onclick="downvote()">Downvote</button>
+    </div>
+
+    <script>
+        const apiUrl = 'https://www.reddit.com/r/showerthoughts/random.json?limit=1';
+
+        function fetchShowerThought() {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const showerThought = data[0]?.data.children[0]?.data.title;
+                    document.getElementById('thought').textContent = showerThought;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    document.getElementById('thought').textContent = 'Failed to fetch shower thought.';
+                });
+        }
+
+        function upvote() {
+            document.getElementById('upvote-btn').classList.add('upvoted');
+            document.getElementById('downvote-btn').classList.remove('downvoted');
+
+            var audio = new Audio('shower-sound.mp3');
+            audio.play();
+        }
+
+        function downvote() {
+            document.getElementById('downvote-btn').classList.add('downvoted');
+            document.getElementById('upvote-btn').classList.remove('upvoted');
+
+            var audio = new Audio('shower-sound.mp3');
+            audio.play();
+        }
+
+        fetchShowerThought();
+
+        // Event listener for spacebar or down button
+        document.addEventListener('keydown', event => {
+            if (event.key === ' ' || event.key === 'ArrowDown') {
+                fetchShowerThought();
+                document.getElementById('upvote-btn').classList.remove('upvoted');
+                document.getElementById('downvote-btn').classList.remove('downvoted');
+
+            var audio = new Audio('shower-sound.mp3');
+            audio.play();
+            
+            }
+        });
+    </script>
+</body>
+</html>
